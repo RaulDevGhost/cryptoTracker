@@ -1,15 +1,64 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import Http from 'cryptoTracker/src/libs/http';
+import {CoinCard} from './CoinCard';
+import {CoinSearch} from './CoinSerach';
 
-class CoinsScreen extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Coins Screen</Text>
-      </View>
-    );
-  }
-}
+export const CoinsScreen = () => {
+  const navigation = useNavigation();
+  const [coins, setCoins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [allCoins, setAllCoins] = useState([]);
+
+  const HandlePress = () => {
+    navigation.navigate('CoinDetails');
+  };
+
+  const handleSearch = input => {
+    const coinsFiltered = allCoins.filter(coin => {
+      return (
+        coin.name.toLowerCase().includes(input.toLowerCase()) ||
+        coin.symbol.toLowerCase().includes(input.toLowerCase())
+      );
+    });
+    setCoins(coinsFiltered);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await Http.instance.get();
+      setCoins(res.data);
+      setLoading(false);
+      setAllCoins(res.data);
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <CoinSearch searching={handleSearch} />
+      {loading ? (
+        <ActivityIndicator style={styles.loader} color="#fff" size="large" />
+      ) : null}
+      <Text>Coins Screen</Text>
+      {/* <Pressable style={styles.btn} onPress={HandlePress}>
+        <Text style={styles.titleText}>GO TO DETAILS</Text>
+      </Pressable> */}
+      <FlatList
+        data={coins}
+        renderItem={({item}) => <CoinCard item={item} />}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -34,5 +83,3 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
 });
-
-export default CoinsScreen;

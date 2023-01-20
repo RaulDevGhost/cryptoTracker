@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
 import Http from 'cryptoTracker/src/libs/http';
 import {CoinCard} from './CoinCard';
-import {CoinSearch} from './CoinSerach';
+import {CoinSearch} from './CoinSearch';
 import colors from '../../utils/colors';
 
 export const CoinsScreen = () => {

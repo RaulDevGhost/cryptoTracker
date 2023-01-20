@@ -16,7 +16,11 @@ const CoinsStack = () => {
         },
         headerTintColor: 'white',
       }}>
-      <Stack.Screen name="Coins" component={CoinsScreen} />
+      <Stack.Screen
+        name="Coins"
+        component={CoinsScreen}
+        options={{title: 'Coins'}}
+      />
       <Stack.Screen name="CoinDetails" component={CoinDetailScreen} />
     </Stack.Navigator>
   );

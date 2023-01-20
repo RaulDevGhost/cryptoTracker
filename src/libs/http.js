@@ -6,6 +6,8 @@ class Http {
 
   url = 'https://api.coinlore.net/api/tickers/?limit=20';
   urlCoin = 'https://api.coinlore.net/api/ticker';
+  urlLogo = 'https://c1.coinlore.com/img/25x25';
+  urlMarkets = 'https://api.coinlore.net/api/coin/markets/?id=';
 
   get = async () => {
     try {
@@ -20,9 +22,20 @@ class Http {
   };
 
   getCoin = async id => {
-    console.log('iddddd---->>>', id);
     try {
       let req = await fetch(`${this.urlCoin}/?id=${id}`);
+      let json = await req.json();
+      return json;
+    } catch (err) {
+      console.log('http get method err', err);
+
+      throw Error(err);
+    }
+  };
+
+  getMarkets = async id => {
+    try {
+      let req = await fetch(`${this.urlMarkets}${id}`);
       let json = await req.json();
       return json;
     } catch (err) {

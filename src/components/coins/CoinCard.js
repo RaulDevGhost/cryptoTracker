@@ -1,53 +1,70 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Platform, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../utils/colors';
-import {color} from 'react-native-reanimated';
 
 export const CoinCard = ({item}) => {
   const navigation = useNavigation();
 
+  const getImgArrow = () => {
+    if (item.percent_change_1h > 0) {
+      return require('cryptoTracker/src/assets/arrow_up.png');
+    } else {
+      return require('cryptoTracker/src/assets/arrow_down.png');
+    }
+  };
+
   const HandlePress = () => {
-    navigation.navigate('CoinDetails', {item});
+    const id = item.id;
+    navigation.navigate('CoinDetails', {id});
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
+    <View style={styles.maincontainer}>
+      <View style={styles.container}>
         <Text style={styles.symbolText}>{item.symbol}</Text>
         <Text style={styles.nameText}>{item.name}</Text>
         <Text style={styles.priceText}>{`$${item.price_usd}`}</Text>
+        <Text style={styles.rankText}> Rank {item.rank}</Text>
       </View>
-      <Pressable style={styles.btn} onPress={HandlePress}>
-        <Text style={styles.btnText}>GO TO DETAILS</Text>
-      </Pressable>
+      <View style={styles.btnContainer}>
+        <View style={styles.donwUpContainer}>
+          <Text style={styles.donwUp}> {item.percent_change_1h}</Text>
+          <Image style={styles.imgIcon} source={getImgArrow()} />
+        </View>
+        <Pressable style={styles.btn} onPress={HandlePress}>
+          <Text style={styles.btnText}>DETAILS</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  maincontainer: {
+    flexDirection: 'column',
     padding: 16,
     borderBottomColor: colors.zircon,
     borderBottomWidth: 1,
     paddingLeft: Platform.OS == 'ios' ? 0 : 16,
     marginLeft: Platform.OS == 'ios' ? 16 : 0,
   },
-  row: {
+  container: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   symbolText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
-    marginRight: 12,
   },
   nameText: {
     color: '#fff',
     fontSize: 14,
-    marginRight: 16,
+  },
+  rankText: {
+    color: '#fff',
+    fontSize: 14,
   },
   priceText: {
     color: '#fff',
@@ -62,14 +79,34 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
   },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+  },
+  donwUpContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  donwUp: {
+    color: '#fff',
+    fontSize: 12,
+    margin: 12,
+  },
   btn: {
-    padding: 8,
-    backgroundColor: colors.zircon,
+    alignSelf: 'flex-end',
+    padding: 10,
+    borderColor: '#fff',
+    borderWidth: 1,
+    backgroundColor: colors.charade,
     borderRadius: 8,
-    margin: 16,
+    marginTop: 16,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   btnText: {
-    color: colors.charade,
+    color: colors.zircon,
     textAlign: 'center',
   },
 });

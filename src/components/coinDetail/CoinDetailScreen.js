@@ -27,9 +27,9 @@ export const CoinDetailScreen = props => {
       const res = await Http.instance.getCoin(id);
       setDetails(res[0]);
       navigation.setOptions({title: res[0].name});
+      getFavorite(res[0].id);
     };
     getDetails();
-
     const getMarkets = async () => {
       const res = await Http.instance.getMarkets(id);
       setMarkets(res);
@@ -39,8 +39,42 @@ export const CoinDetailScreen = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const getFavorite = async detailId => {
+    const key = `favorite-${detailId}`;
+    const isStored = await Storage.instance.get(key);
+
+    if (isStored !== null) {
+      setIsFavorite(true);
+    }
+  };
+
   const toogleFavorite = () => {
-    console.log('hello');
+    if (!isFavorite) {
+      addFavorite();
+    } else {
+      removeFavorie();
+    }
+  };
+
+  const addFavorite = async () => {
+    const coin = JSON.stringify(details);
+    const key = `favorite-${details.id}`;
+
+    const stored = await Storage.instance.store(key, coin);
+
+    //console.log('stored', stored);
+
+    if (stored) {
+      setIsFavorite(true);
+    }
+  };
+
+  const removeFavorie = async () => {
+    const key = `favorite-${details.id}`;
+    const removed = await Storage.instance.remove(key);
+    if (removed) {
+      setIsFavorite(false);
+    }
   };
 
   const getSections = coin => {
@@ -66,6 +100,7 @@ export const CoinDetailScreen = props => {
     <View style={styles.container}>
       <View style={styles.subHeader}>
         <Text style={styles.titleText}>{details.name}</Text>
+
         <Image
           style={styles.iconImg}
           source={{
@@ -78,7 +113,10 @@ export const CoinDetailScreen = props => {
             styles.btnFavorite,
             isFavorite ? styles.btnFavoriteRemove : styles.btnFavoriteAdd,
           ]}>
-          <Text style={styles.btnFavoriteText}>
+          <Text
+            style={
+              isFavorite ? styles.btnFavoriteRemove : styles.btnFavoriteAdd
+            }>
             {isFavorite ? 'Remove favorite' : 'Add favorite'}
           </Text>
         </Pressable>
@@ -166,16 +204,27 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   btnFavorite: {
-    padding: 8,
+    width: 130,
     borderRadius: 8,
+    padding: 10,
+    borderColor: '#fff',
+    borderWidth: 1,
+    backgroundColor: colors.charade,
+    marginTop: 16,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   btnFavoriteText: {
     color: colors.white,
   },
   btnFavoriteAdd: {
-    backgroundColor: colors.picton,
+    borderColor: colors.active,
+    color: colors.active,
+    textAlign: 'center',
   },
   btnFavoriteRemove: {
-    backgroundColor: colors.carmine,
+    borderColor: colors.block,
+    color: colors.block,
+    textAlign: 'center',
   },
 });

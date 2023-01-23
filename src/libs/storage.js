@@ -6,11 +6,9 @@ class Storage {
   store = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-
       return true;
     } catch (err) {
       console.log('storage store err', err);
-
       return false;
     }
   };
@@ -20,7 +18,6 @@ class Storage {
       return await AsyncStorage.getItem(key);
     } catch (err) {
       console.log('storage get err', err);
-
       throw Error(err);
     }
   };
@@ -48,7 +45,6 @@ class Storage {
   remove = async key => {
     try {
       await AsyncStorage.removeItem(key);
-
       return true;
     } catch (err) {
       console.log('storage remove err', err);

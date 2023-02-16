@@ -23,9 +23,9 @@ const FavoritesScreen = () => {
 
   const getMulti = async keysPara => {
     const multi = await Storage.instance.multiGet(keysPara);
-    console.log(multi);
+    //console.log(multi);
     const favorites = multi.map(fav => JSON.parse(fav[1]));
-    console.log('favs', favorites);
+    //console.log('favs', favorites);
     setFavs(favorites);
   };
   return (

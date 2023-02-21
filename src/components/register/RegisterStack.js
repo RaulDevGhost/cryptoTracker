@@ -17,9 +17,9 @@ const RegisterStack = () => {
         },
         headerTintColor: colors.white,
       }}>
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="HomeRegister" component={HomeRegisterScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
 };
